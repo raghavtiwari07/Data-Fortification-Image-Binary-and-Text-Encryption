@@ -1,63 +1,35 @@
-#include <stdio.h>
-#include <string.h>
-#include <conio.h>
+import openai
 
-int main ()
-{
-	int ans, key;
-	char in[260];
-	char answer;
-	while (1){
-	printf("Press 1 to Encrypt file.\nPress 2 to Decrypt file.\n");
-	scanf("%d", &ans);
-	printf("Enter File Name -\n");
-	scanf("%s", &in);
-	printf("Enter Key -\n");
-	scanf("%d", &key);
-	if (ans == 1)
-	{
-		char c;
-		FILE *fin;
-		FILE *fout;
-		fin = fopen(in, "rb");
-		strcpy(in, "Encrypted_output");//Creates a file with no extention
-		fout = fopen(in, "wb");
-		while (!feof(fin))
-		{
-			c = fgetc(fin);
-			int temp = (c + key);
-			fputc((char)temp, fout);
-		}
-		fclose(fin);
-		fclose(fout);
-	}
-	else if (ans == 2)
-	{
-		char c;
-		FILE *fin;
-		FILE *fout;
-		fin = fopen(in, "rb");
-		strcpy(in, "Decrypted_output");//Make sure you add the same extension as the original file
-		fout = fopen(in, "wb");
-		while (!feof(fin))
-		{
-			c = fgetc(fin);
-			int temp = (c - key);
-			fputc((char)temp, fout);
-		}
-		fclose(fin);
-		fclose(fout);
-	}
-	printf("\nDo you want to go back to menu? Y or N:\n", answer);
-    scanf("%s", &answer);
-  		if (answer == 'Y'){
-  			continue;
-    	}
-    	else{
-    		exit(0);
-		}
-		return 0;
-}
-	getch();
-}
+# Set your OpenAI API key
+openai.api_key = "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"
 
+def obfuscate_code(code_snippet):
+    prompt = f"Please obfuscate the following Python code:\n\n{code_snippet}"
+    
+    # Call the OpenAI API with the code snippet as a prompt
+    response = openai.Completion.create(
+        engine="text-davinci-003",  # Choose the engine suitable for code-related tasks
+        prompt=prompt,
+        max_tokens=150,  # Adjust as needed
+        temperature=0.7,  # Adjust as needed
+        n=1
+    )
+
+    # Extract the obfuscated code from the API response
+    obfuscated_code = response.choices[0].text.strip()
+    
+    return obfuscated_code
+
+# Example code snippet
+input_code = """
+def add_numbers(a, b):
+    result = a + b
+    return result
+"""
+
+# Obfuscate the code
+obfuscated_code = obfuscate_code(input_code)
+
+# Print the obfuscated code
+print("Original Code:\n", input_code)
+print("\nObfuscated Code:\n", obfuscated_code)
